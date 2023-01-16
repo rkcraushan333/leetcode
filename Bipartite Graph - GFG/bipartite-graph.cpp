@@ -7,23 +7,13 @@ class Solution {
 public:
     vector<bool>color;
     vector<bool>vis;
-    bool bfs(int s,vector<int>adj[]){
+    bool dfs(int s,vector<int>adj[],int c){
         vis[s] = 1;
-        color[s] = 0;
-        queue<pair<int,int>>q;
-        q.push({s,0});
-        while(!q.empty()){
-            int p = q.front().first;
-            int c = q.front().second;
-            q.pop();
-            for(auto &i:adj[p]){
-                if(vis[i] && color[i]==c) return false;
-                if(!vis[i]){
-                    vis[i] = 1;
-                    color[i] = !c;
-                    q.push({i,!c});
-                }
-            }
+        color[s] = c;
+        for(auto &i:adj[s]){
+            if(vis[i]&&color[i]==c) return false;
+            if(!vis[i])
+                 if(!dfs(i,adj,!c)) return false;
         }
         return true;
     }
@@ -32,7 +22,7 @@ public:
 	    vis.resize(V);
 	    for(int i=0;i<V;i++){
 	        if(!vis[i]) 
-	           if(!bfs(i,adj)) return false;
+	           if(!dfs(i,adj,0)) return false;
 	    }
 	    return true;
 	}
