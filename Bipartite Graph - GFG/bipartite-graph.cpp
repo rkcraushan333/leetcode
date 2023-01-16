@@ -1,0 +1,62 @@
+//{ Driver Code Starts
+#include<bits/stdc++.h>
+using namespace std;
+
+// } Driver Code Ends
+class Solution {
+public:
+    vector<bool>color;
+    vector<bool>vis;
+    bool bfs(int s,vector<int>adj[]){
+        vis[s] = 1;
+        color[s] = 0;
+        queue<pair<int,int>>q;
+        q.push({s,0});
+        while(!q.empty()){
+            int p = q.front().first;
+            int c = q.front().second;
+            q.pop();
+            for(auto &i:adj[p]){
+                if(vis[i] && color[i]==c) return false;
+                if(!vis[i]){
+                    vis[i] = 1;
+                    color[i] = !c;
+                    q.push({i,!c});
+                }
+            }
+        }
+        return true;
+    }
+	bool isBipartite(int V, vector<int>adj[]){
+	    color.resize(V);
+	    vis.resize(V);
+	    for(int i=0;i<V;i++){
+	        if(!vis[i]) 
+	           if(!bfs(i,adj)) return false;
+	    }
+	    return true;
+	}
+};
+
+//{ Driver Code Starts.
+int main(){
+	int tc;
+	cin >> tc;
+	while(tc--){
+		int V, E;
+		cin >> V >> E;
+		vector<int>adj[V];
+		for(int i = 0; i < E; i++){
+			int u, v;
+			cin >> u >> v;
+			adj[u].push_back(v);
+			adj[v].push_back(u);
+		}
+		Solution obj;
+		bool ans = obj.isBipartite(V, adj);    
+		if(ans)cout << "1\n";
+		else cout << "0\n";  
+	}
+	return 0;
+}
+// } Driver Code Ends
