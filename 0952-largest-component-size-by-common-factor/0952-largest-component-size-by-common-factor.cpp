@@ -36,10 +36,6 @@ public:
         for(auto &i:s){
             res = max(res,size[i]);           
         }
-        cout<<par[4]<<endl;
-        cout<<par[6]<<endl;
-        cout<<par[15]<<endl;
-        cout<<par[35]<<endl;
         return res;
     }
 };
