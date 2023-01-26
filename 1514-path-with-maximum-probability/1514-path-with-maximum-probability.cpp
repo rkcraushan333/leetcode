@@ -1,15 +1,15 @@
 class Solution {
 public:
-    double maxProbability(int n, vector<vector<int>>& bc, vector<double>& mf, int start, int end) {
-        vector<vector<pair<int,double>>>adj(n);
-        for(int x=0;x<bc.size();x++){
-            adj[bc[x][0]].push_back({bc[x][1],mf[x]});
-            adj[bc[x][1]].push_back({bc[x][0],mf[x]});
+    double maxProbability(int n, vector<vector<int>>& edges, vector<double>& succProb, int start, int end) {
+        vector<pair<int,double>>adj[n];
+        for(int i=0;i<edges.size();i++){
+            adj[edges[i][0]].push_back({edges[i][1],succProb[i]});
+            adj[edges[i][1]].push_back({edges[i][0],succProb[i]});
         }
         vector<bool>vis(n);
         double res = 0;
         set<pair<double,int>>s;
-        s.insert({1,start});
+        s.insert({0,start});
         while(s.size()){
             auto p = *s.rbegin();
             auto k = s.end();
@@ -21,10 +21,12 @@ public:
                 int node = t.first;
                 double wt = t.second;
                 if(node==end){
-                    res = max(res,wt*p.first);
+                    if(p.first==0) res = max(res,wt);
+                    else res = max(res,wt*p.first);
                 }
                 else{
-                    s.insert({wt*p.first,node});
+                    if(p.first==0) s.insert({wt,node});
+                    else s.insert({wt*p.first,node});
                 }
             }
         }
