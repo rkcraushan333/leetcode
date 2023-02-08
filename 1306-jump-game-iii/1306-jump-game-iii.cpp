@@ -3,6 +3,8 @@ public:
     int dp[50001];
     vector<bool>vis;
     bool f(vector<int>&v,int s){
+        ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
         if(s<0||s>=v.size()||vis[s]) return false;
         vis[s] = 1;
         if(v[s]==0) return true;
