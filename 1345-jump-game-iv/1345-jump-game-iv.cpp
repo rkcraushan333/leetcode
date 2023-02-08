@@ -3,7 +3,7 @@ class Solution {
 public:
     int minJumps(vector<int>& arr) {
         fastio();
-        map<int,vector<int>>adj;
+        unordered_map<int,vector<int>>adj;
         for(int i=0;i<arr.size();i++){
             adj[arr[i]].push_back(i);
         }
