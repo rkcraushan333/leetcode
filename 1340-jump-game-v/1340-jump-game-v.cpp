@@ -15,6 +15,9 @@ public:
         return dp[i]=res;
     }
     int maxJumps(vector<int>& arr, int d) {
+        ios_base::sync_with_stdio(false);
+        cin.tie(NULL);
+        cout.tie(NULL);
         memset(dp,-1,sizeof(dp));
         int res = 0;
         for(int i=0;i<arr.size();i++){
