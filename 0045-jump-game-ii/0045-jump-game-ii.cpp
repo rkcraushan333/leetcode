@@ -2,6 +2,8 @@ class Solution {
 public:
     int dp[10001];
     int f(vector<int>&v,int i=0){
+        ios_base::sync_with_stdio(false);
+        cin.tie(NULL);
         if(i==v.size()-1) return 0;
         int res = 1e8;
         if(dp[i]!=-1) return dp[i];
