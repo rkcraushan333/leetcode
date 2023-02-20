@@ -1,17 +1,17 @@
 class Solution {
 public:
-    int dp[2503][2503];
-    int f(vector<int>&v,int i,int last){
+    int dp1[2502][2502];
+    int f1(vector<int>&v,int l=-1,int i=0){
         if(i==v.size()) return 0;
-        if(dp[i][last]!=-1) return dp[i][last];
-        if(v[i]>v[last]) 
-            return dp[i][last]=max(1+f(v,i+1,i),f(v,i+1,last));
-        else 
-            return dp[i][last]=f(v,i+1,last);
+        int &k = dp1[i][l+1];
+        if(k!=-1) return k;
+        int res = 0;
+        res = max(res,f1(v,l,i+1));
+        if(l==-1||v[l]<v[i]) res = max(res,1+f1(v,i,i+1));
+        return k = res;
     }
     int lengthOfLIS(vector<int>& nums) {
-        memset(dp,-1,sizeof(dp));
-        nums.push_back(-10001);
-        return f(nums,0,nums.size()-1);
+        memset(dp1,-1,sizeof(dp1));
+        return f1(nums);
     }
 };
