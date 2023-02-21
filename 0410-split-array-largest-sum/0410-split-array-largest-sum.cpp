@@ -2,7 +2,7 @@ class Solution {
 public:
     int dp[1001][51];
     int f(int k,vector<int>&v,int i=0){
-        if(k==0 && i==v.size()) return 0;
+        if(k==0 && i==v.size()) return INT_MIN;
         if(k==0||i==v.size()) return INT_MAX;
         int &t = dp[i][k];
         if(t!=-1) return t; 
