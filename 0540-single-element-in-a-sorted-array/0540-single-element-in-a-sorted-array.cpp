@@ -1,23 +1,19 @@
 class Solution {
 public:
-    int singleNonDuplicate(vector<int>& v) {
-        int n = v.size();
-        int s = 0,e = n-1;
+    int singleNonDuplicate(vector<int>& nums) {
+        int n = nums.size();
+        int s = 0,e = nums.size();
         while(s<e){
-            int m = (s+e)/2;
-            if((m!=n-1) && v[m]==v[m+1]){
-                if((n-m)%2==0)
-                    e = m-1;
-                else 
-                    s = m+1;
-            }else if((m!=0) && v[m]==v[m-1]){
-                if((n-m)%2==0)
-                    s = m+1;
-                else
-                    e = m-1;
+            int mid = (s+e)>>1;
+            if((mid!=0) && nums[mid]==nums[mid-1]){
+                if((n-mid-1)%2==0) e = mid -1;
+                else s = mid+1;
+            }else if((mid!=n-1) && nums[mid]==nums[mid+1]){
+                if((n-mid)%2==0) e = mid-1;
+                else s = mid+1;
             }else
-                return v[m];
+                return nums[mid];
         }
-        return v[s];
+        return nums[s];
     }
 };
