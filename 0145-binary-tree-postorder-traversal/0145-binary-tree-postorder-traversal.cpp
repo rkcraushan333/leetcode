@@ -1,18 +1,31 @@
+// Using 1 stack
 class Solution {
 public:
     vector<int> postorderTraversal(TreeNode* root) {
         vector<int>v;
         if(!root) return v;
+        TreeNode* curr = root;
         stack<TreeNode*>s;
-        s.push(root);
-        while(!s.empty()){
-            TreeNode* node = s.top();
-            s.pop();
-            v.push_back(node->val);
-            if(node->left) s.push(node->left);
-            if(node->right) s.push(node->right);
+        while((curr!=NULL)||(!s.empty())){
+            if(curr!=NULL){
+                s.push(curr);
+                curr = curr->left;
+            }else{
+                TreeNode* temp;
+                temp = s.top()->right;
+                if(!temp){
+                    temp = s.top();
+                    s.pop();
+                    v.push_back(temp->val);
+                    while((!s.empty())&& temp==s.top()->right){
+                        temp = s.top();
+                        s.pop();
+                        v.push_back(temp->val);
+                    }
+                }else
+                    curr = temp;
+            }
         }
-        reverse(v.begin(),v.end());
         return v;
     }
 };
