@@ -1,31 +1,31 @@
-// Using 1 stack
+// All in one
+// concept :- preorder(1) ++ left
+//            inorder(2) ++ right
+//            postorder(3)
 class Solution {
 public:
     vector<int> postorderTraversal(TreeNode* root) {
-        vector<int>v;
-        if(!root) return v;
-        TreeNode* curr = root;
-        stack<TreeNode*>s;
-        while((curr!=NULL)||(!s.empty())){
-            if(curr!=NULL){
-                s.push(curr);
-                curr = curr->left;
+        if(root==NULL) return {};
+        stack<pair<TreeNode*,int>>s;
+        s.push({root,1});
+        vector<int>preorder,inorder,postorder;
+        while(s.size()){
+            auto p = s.top();
+            s.pop();
+            if(p.second==1){
+                preorder.push_back(p.first->val);
+                p.second++;
+                s.push(p);
+                if(p.first->left!=NULL) s.push({p.first->left,1});
+            }else if(p.second==2){
+                inorder.push_back(p.first->val);
+                p.second++;
+                s.push(p);
+                if(p.first->right!=NULL) s.push({p.first->right,1});
             }else{
-                TreeNode* temp;
-                temp = s.top()->right;
-                if(!temp){
-                    temp = s.top();
-                    s.pop();
-                    v.push_back(temp->val);
-                    while((!s.empty())&& temp==s.top()->right){
-                        temp = s.top();
-                        s.pop();
-                        v.push_back(temp->val);
-                    }
-                }else
-                    curr = temp;
+                postorder.push_back(p.first->val);
             }
         }
-        return v;
+        return postorder;
     }
 };
