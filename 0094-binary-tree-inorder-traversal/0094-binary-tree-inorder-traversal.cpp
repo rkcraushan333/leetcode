@@ -1,23 +1,31 @@
-// iterative approach
+// All in one
+// concept :- preorder(1) ++ left
+//            inorder(2) ++ right
+//            postorder(3)
 class Solution {
 public:
     vector<int> inorderTraversal(TreeNode* root) {
-        vector<int>v;
-        if(!root) return v;
-        stack<TreeNode*>s;
-        TreeNode* node= root;
-        while(true){
-            if(node){
-                s.push(node);
-                node = node->left;
+        if(root==NULL) return {};
+        stack<pair<TreeNode*,int>>s;
+        s.push({root,1});
+        vector<int>preorder,inorder,postorder;
+        while(s.size()){
+            auto p = s.top();
+            s.pop();
+            if(p.second==1){
+                preorder.push_back(p.first->val);
+                p.second++;
+                s.push(p);
+                if(p.first->left!=NULL) s.push({p.first->left,1});
+            }else if(p.second==2){
+                inorder.push_back(p.first->val);
+                p.second++;
+                s.push(p);
+                if(p.first->right!=NULL) s.push({p.first->right,1});
             }else{
-                if(s.empty()) break;
-                TreeNode *temp = s.top();
-                s.pop();
-                v.push_back(temp->val);
-                node = temp->right;
+                postorder.push_back(p.first->val);
             }
         }
-        return v;
+        return inorder;
     }
 };
