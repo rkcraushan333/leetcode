@@ -1,14 +1,14 @@
 class Solution {
 public:
-    pair<int,bool> f(TreeNode* root){
-        if(!root) return {0,1};
-        auto l = f(root->left);
-        auto r = f(root->right);
-        if(abs(l.first-r.first)>1) return {0,0};
-        if(l.second==false || r.second==false) return {0,0};
-        return {max(l.first,r.first)+1,1};
+    int f(TreeNode* root){
+        if(!root) return 0;
+        int lh = f(root->left);
+        int rh = f(root->right);
+        if(abs(lh-rh)>1 || lh==-1 ||rh ==-1) return -1;
+        return max(lh,rh)+1;
     }
     bool isBalanced(TreeNode* root) {
-        return f(root).second;
+        if(f(root)==-1) return 0;
+        return 1;
     }
 };
