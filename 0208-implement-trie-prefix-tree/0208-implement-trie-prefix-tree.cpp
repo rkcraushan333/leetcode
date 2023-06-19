@@ -1,64 +1,86 @@
 class TrieNode{
-public:
+private:
     TrieNode* child[26];
     bool flag;
-    
-    TrieNode(){
-        flag = false;
+public:
+    TrieNode()
+    {
         for(int i=0;i<26;i++)
+        {
             child[i] = NULL;
+        }
+        flag = false;
     }
-    
-    bool check(char c){
-        return (child[c-'a']!=NULL);
+    bool check(char c)
+    {
+        return child[c-'a']!=NULL;
     }
-    void put(char c,TrieNode* node){
-        child[c-'a'] = node;
+    void create(char c,TrieNode* node)
+    {
+        child[c-'a']=node;
     }
-    TrieNode* get(char c){
+    TrieNode* getNext(char c)
+    {
         return child[c-'a'];
     }
-    void setEnd(){
+    void setLast()
+    {
         flag = true;
     }
-    bool isLast(){
+    bool isLast()
+    {
         return flag;
     }
 };
 class Trie {
 public:
     TrieNode* root;
-    
     Trie() {
         root = new TrieNode();
     }
+    
     void insert(string word) {
         TrieNode* node = root;
-        for(auto &i:word){
-            if(!(node->check(i))){
-                node->put(i,new TrieNode());
+        for(auto i:word)
+        {
+            if(!node->check(i))
+            {
+                node->create(i,new TrieNode());
             }
-            node = node->get(i);
+            node = node->getNext(i);
         }
-        node->setEnd();
+        node->setLast();
     }
     
     bool search(string word) {
         TrieNode* node = root;
-        for(auto &i:word){
-            if(!(node->check(i))){
+        for(auto i:word)
+        {
+            if(node->check(i))
+            {
+                node = node->getNext(i);
+            }
+            else
+            {
                 return false;
             }
-            node = node->get(i);
         }
         return node->isLast();
     }
     
-    bool startsWith(string prefix) {
+    bool startsWith(string word) 
+    {
         TrieNode* node = root;
-        for(auto &i:prefix){
-            if(!(node->check(i))) return false;
-            node = node->get(i);
+        for(auto i:word)
+        {
+            if(node->check(i))
+            {
+                node = node->getNext(i);
+            }
+            else
+            {
+                return false;
+            }
         }
         return true;
     }
