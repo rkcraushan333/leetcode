@@ -18,11 +18,11 @@ public:
         {
             if(b) 
             {
-                return true;
+                return rkc=true;
             }
             else 
             {
-                return false;
+                return rkc=false;
             }
         }
         bool ans;
