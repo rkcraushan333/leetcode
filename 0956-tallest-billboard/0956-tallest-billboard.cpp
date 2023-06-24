@@ -1,4 +1,4 @@
-// Keep Track of the distance
+// Keep Track of the difference
 class Solution {
 public:
     int dp[21][10001];
