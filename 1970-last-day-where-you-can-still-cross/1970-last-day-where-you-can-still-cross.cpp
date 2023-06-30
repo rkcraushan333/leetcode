@@ -5,16 +5,19 @@ public:
     {
         vis[i][j] = 1;
         if(mp[{i,j}]<=m) return 0;
+        // if(m==4){
+        //     cout<<i<<" "<<j<<endl;
+        // }
         if(i==r-1) return 1;
-        bool ans = 0;
-        
-        for(int x=0;x<4;x++)
+        int ans = 0;
+        for(int id = 0;id<4;id++)
         {
-            int a = i+dx[x],b = j+dy[x];
-            if(a<0||b<0||a>=r||b>=c||vis[a][b]) continue;
-            ans |= dfs(vis,a,b,r,c,mp,m);
+            int x = i+dx[id], y = j+dy[id];
+            if(x>=0&&y>=0&&x<r&&y<c&&vis[x][y]==0)
+            {
+                ans |= dfs(vis,x,y,r,c,mp,m);
+            }
         }
-        
         return ans;
     }
     int latestDayToCross(int row, int col, vector<vector<int>>& cells) 
@@ -36,6 +39,7 @@ public:
                 {
                     b = dfs(vis,0,i,row,col,mp,m);
                 }
+                // cout<<m<<" "<<b<<" "<<i<<endl;
                 if(b) break;
             }
             if(b)
