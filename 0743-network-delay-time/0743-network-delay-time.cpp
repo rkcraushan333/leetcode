@@ -1,34 +1,44 @@
 class Solution {
 public:
-    vector<int>dis,vis;
-    vector<pair<int,int>>adj[101];
-    void f(int src){
-        set<pair<int,int>>s;
-        s.insert({0,src});
-        dis[src] = 0;
-        while(s.size()>0){
-            auto node = *s.begin();
-            s.erase(s.begin());
-            if(vis[node.second]) continue;
-            vis[node.second] = 1;
-            for(auto& c:adj[node.second]){
-                if(dis[c.first]>node.first+c.second){
-                    dis[c.first] = node.first+c.second;
-                    s.insert({dis[c.first],c.first});
+    vector<int> dj(int n,vector<vector<pair<int,int>>>&adj,int k)
+    {
+        vector<int>v(n,INT_MAX);
+        v[k] = 0;
+        priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>>pq;
+        pq.push({0,k});
+        while(pq.size())
+        {
+            auto t = pq.top(); pq.pop();
+            int d = t.first;
+            int node = t.second;
+            for(auto i:adj[node])
+            {
+                // cout<<"debug";
+                int a = i.first, b = i.second;
+                if(v[a]>d+b)
+                {
+                    // cout<<"debug";
+                    v[a] = d+b;
+                    pq.push({d+b,a});
                 }
             }
         }
+        return v;
     }
-    int networkDelayTime(vector<vector<int>>& times, int n, int k) {
-        dis.resize(n+1,INT_MAX);
-        vis.resize(n+1);
-        for(auto &v:times) adj[v[0]].push_back({v[1],v[2]});
-        f(k);
-        int res = 0;
-        for(int i=1;i<=n;i++) {
-            if(dis[i]==INT_MAX) return -1;
-            res = max(res,dis[i]);
+    int networkDelayTime(vector<vector<int>>& times, int n, int k) 
+    {
+        vector<vector<pair<int,int>>>adj(n);
+        for(auto v:times)
+        {
+            adj[v[0]-1].push_back({v[1]-1,v[2]});
         }
-        return res;
+        vector<int>v1 = dj(n,adj,k-1);
+        int mx = 0;
+        for(auto i:v1)
+        {
+            // cout<<i<<endl;
+            mx = max(mx,i);
+        }
+        return mx==INT_MAX?-1:mx;
     }
 };
