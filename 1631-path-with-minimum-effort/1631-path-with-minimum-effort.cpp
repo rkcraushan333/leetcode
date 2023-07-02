@@ -1,39 +1,33 @@
+// Using Dijkstra Algorithm
 class Solution {
 public:
-    int n,m;
-    int dx[4] = {0,0,1,-1}, dy[4] = {1,-1,0,0};
-    bool dfs(vector<vector<int>>&v,vector<vector<bool>>&vis,int mid,int last,int i=0,int j=0)
+    int dx[4] = {1,-1,0,0}; int dy[4] = {0,0,1,-1};
+    int minimumEffortPath(vector<vector<int>>& v)
     {
-        if(i<0||j<0||i>=n||j>=m||vis[i][j]) return 0;
-        if(abs(last-v[i][j])>mid) return 0;
-        if(i==n-1&&j==m-1) return 1;
-        vis[i][j] = 1;
-        bool ans = 0;
-        for(int x = 0;x<4;x++)
+        int n = v.size();
+        int m = v[0].size();
+        vector<vector<int>>dis(n,vector<int>(m,INT_MAX));
+        dis[0][0] = 0;
+        priority_queue<vector<int>,vector<vector<int>>,greater<vector<int>>>pq;
+        pq.push({0,0,0});
+        while(!pq.empty())
         {
-            int a = i+dx[x],b = j+dy[x];
-            ans |= dfs(v,vis,mid,v[i][j],a,b);
-        }
-        return ans;
-    }
-    int minimumEffortPath(vector<vector<int>>& heights)
-    {
-        n = heights.size();
-        m = heights[0].size();
-        int s = -1,e = 1e9;
-        while(e-s>1)
-        {
-            int mid = (s+e)>>1;
-            vector<vector<bool>>vis(n,vector<bool>(m));
-            if(dfs(heights,vis,mid,heights[0][0]))
+            auto t = pq.top(); pq.pop();
+            int d = t[0];
+            int a = t[1],b = t[2];
+            if(a==n-1&&b==m-1) return d;
+            for(int i=0;i<4;i++)
             {
-                e = mid;
-            }
-            else 
-            {
-                s = mid;
+                int x = a + dx[i],y = b + dy[i];
+                if(x<0||y<0||x>=n||y>=m) continue;
+                int dd = max(d,abs(v[x][y]-v[a][b]));
+                if(dis[x][y]>dd)
+                {
+                    dis[x][y] = dd;
+                    pq.push({dd,x,y});
+                }
             }
         }
-        return e;
+        return 0;
     }
 };
