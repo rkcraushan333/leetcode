@@ -51,12 +51,12 @@ public:
     {
         if(head==NULL || head->next==NULL) return head;
         ListNode* mid = findMid(head);
-        ListNode* right = mid->next;
+        ListNode* right = mergeSort(mid->next);
         mid->next = NULL;
-        ListNode* left = head;
-        ListNode* l = mergeSort(left);
-        ListNode* r = mergeSort(right);
-        return merge(l,r);
+        ListNode* left = mergeSort(head);
+        // ListNode* l = mergeSort(left);
+        // ListNode* r = mergeSort(right);
+        return merge(left,right);
     }
     ListNode* sortList(ListNode* head) 
     {
