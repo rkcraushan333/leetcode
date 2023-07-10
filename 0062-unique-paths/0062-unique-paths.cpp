@@ -1,17 +1,20 @@
 class Solution {
 public:
-    int dp[101][101];
-    int f(int n,int m,int i=0,int j=0){
-        if(i==n-1&&j==m-1) return 1;
-        int &t = dp[i][j];
-        if(t!=-1) return t;
-        int res = 0;
-        if(i<n-1) res += f(n,m,i+1,j);
-        if(j<m-1) res += f(n,m,i,j+1);
-        return t=res;
-    }
+int f(int i,int j ,int m , int n,vector<vector<int>>&dp){
+  
+if(i>m-1 || j>n-1)
+return 0;
+if(i==m-1 && j==n-1)
+return 1;
+if(dp[i][j]!=-1)
+return dp[i][j];
+dp[i][j]=f(i+1,j,m,n,dp)+f(i,j+1,m,n,dp);
+return dp[i][j];
+}
     int uniquePaths(int m, int n) {
-        memset(dp,-1,sizeof(dp));
-        return f(m,n);
+        vector<vector<int>> dp( m , vector<int> (n, -1)); 
+     
+return f(0,0,m,n,dp);
+
     }
 };
