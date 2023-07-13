@@ -1,34 +1,32 @@
-// Topo Sort
 class Solution {
 public:
-    bool canFinish(int n, vector<vector<int>>& v) 
+    bool canFinish(int n, vector<vector<int>>& pre) 
     {
         vector<vector<int>>adj(n);
-        vector<int>indeg(n);
-        for(auto i:v)
+        vector<int>deg(n);
+        for(auto i:pre)
         {
+            deg[i[0]]++;
             adj[i[1]].push_back(i[0]);
-            indeg[i[0]]++;
         }
         queue<int>q;
-        vector<int>topo;
         for(int i=0;i<n;i++)
         {
-            if(indeg[i]==0)
+            if(deg[i]==0)
             {
                 q.push(i);
             }
         }
-        while(q.size()>0)
+        vector<int>topo;
+        while(!q.empty())
         {
             int t = q.front(); q.pop();
             topo.push_back(t);
-            for(auto c:adj[t])
+            for(auto i:adj[t])
             {
-                indeg[c]--;
-                if(indeg[c]==0)
-                {
-                    q.push(c);
+                deg[i]--;
+                if(deg[i]==0){
+                    q.push(i);
                 }
             }
         }
