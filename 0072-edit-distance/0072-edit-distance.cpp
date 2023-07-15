@@ -20,11 +20,11 @@ public:
             // insert in 2nd
             ans = min(ans,1+f(s,t,i+1,j));
             // delete in 1st 
-            // ans = min(ans,1+f(s,t,i+1,j));
-            // // delete in 2nd
-            // ans = min(ans,1+f(s,t,i,j+1));
-            // // replace in 1st
-            // ans = min(ans,1+f(s,t,i+1,j+1));
+            ans = min(ans,1+f(s,t,i+1,j));
+            // delete in 2nd
+            ans = min(ans,1+f(s,t,i,j+1));
+            // replace in 1st
+            ans = min(ans,1+f(s,t,i+1,j+1));
             // replace in 2nd 
             ans = min(ans,1+f(s,t,i+1,j+1));
         }
