@@ -1,10 +1,10 @@
 class Solution {
 public:
-    int dp[21][21][2];
+    int dp[21][21];
     int f(vector<int>&v,int i,int j,bool b = 0)
     {
         if(i>j) return 0;
-        int &t = dp[i][j][b];
+        int &t = dp[i][j];
         if(t!=-1) return t;
         int ans;
         if(!b)
