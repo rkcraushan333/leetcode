@@ -1,81 +1,57 @@
 class Solution {
 public:
-    int dx[4] = {0,0,1,-1};
-    int dy[4] = {1,-1,0,0};
-    vector<vector<pair<int,int>>>vis;
-    void dfs(vector<vector<int>>&grid,int i,int j,int id,int &cnt)
+    vector<int>par,Size;
+    int findSet(int u)
     {
-        if(i>=grid.size()||j>=grid[0].size()||i<0||j<0||vis[i][j].second||grid[i][j]==0) return;
-        vis[i][j] = {id,1};
-        cnt++;
-        for(int k=0;k<4;k++)
+        return par[u] = par[u]==u?u:findSet(par[u]);
+    }
+    void unionSet(int a,int b)
+    {
+        a = findSet(a);
+        b = findSet(b);
+        if(a!=b)
         {
-            dfs(grid,i+dx[k],j+dy[k],id,cnt);
+            if(Size[a]<Size[b]) swap(a,b);
+            par[b] = a;
+            Size[a] += Size[b];
         }
     }
     int largestIsland(vector<vector<int>>& grid) 
     {
         int n = grid.size();
         int m = grid[0].size();
-        vis.resize(n,vector<pair<int,int>>(m));
-        unordered_map<int,int>hash;
-        int id = 0;
-        int ans = 0;
+        par.resize(m*n);
+        Size.resize(m*n,1);
+        for(int i=0;i<m*n;i++) par[i] = i;
         for(int i=0;i<n;i++)
         {
             for(int j=0;j<m;j++)
             {
-                if(!vis[i][j].second)
+                if(grid[i][j])
                 {
-                    int cnt = 0;
-                    dfs(grid,i,j,id,cnt);
-                    hash[id] = cnt;
-                    id++;
-                    ans = max(ans,cnt);
-                }
+                    if(i>0) if(grid[i-1][j]) unionSet(i*m+j,(i-1)*m+j);
+                    if(i<n-1) if(grid[i+1][j]) unionSet(i*m+j,(i+1)*m+j);
+                    if(j>0) if(grid[i][j-1]) unionSet(i*m+j,i*m+(j-1));
+                    if(j<m-1) if(grid[i][j+1]) unionSet(i*m+j,i*m+(j+1));
+                }   
             }
         }
+        int ans = 0;
+        for(auto i:Size) ans = max(ans,i);
         for(int i=0;i<n;i++)
         {
             for(int j=0;j<m;j++)
             {
-                if(grid[i][j]==0)
+                if(!grid[i][j])
                 {
-                    set<int>ids;
-                    if(i>0)
-                    {
-                        if(grid[i-1][j])
-                        {
-                            ids.insert(vis[i-1][j].first);
-                        }
-                    }
-                    if(i<n-1)
-                    {
-                        if(grid[i+1][j])
-                        {
-                            ids.insert(vis[i+1][j].first);
-                        }
-                    }
-                    if(j>0)
-                    {
-                        if(grid[i][j-1])
-                        {
-                            ids.insert(vis[i][j-1].first);
-                        }
-                    }
-                    if(j<m-1)
-                    {
-                        if(grid[i][j+1])
-                        {
-                            ids.insert(vis[i][j+1].first);
-                        }
-                    }
-                    int temps=1;
-                    for(auto x:ids)
-                    {
-                        temps += hash[x];
-                    }
-                    ans = max(ans,temps);
+                    set<int>st;
+                    int curr = 1;
+                    if(i>0) if(grid[i-1][j]) st.insert(findSet((i-1)*m+j));
+                    if(i<n-1) if(grid[i+1][j]) st.insert(findSet((i+1)*m+j));
+                    if(j>0) if(grid[i][j-1]) st.insert(findSet(i*m+(j-1)));
+                    if(j<m-1) if(grid[i][j+1]) st.insert(findSet(i*m+(j+1)));
+                    for(auto x:st) curr += Size[x];
+                    ans = max(ans,curr);
                 }
             }
         }
