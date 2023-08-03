@@ -1,35 +1,34 @@
 class Solution {
 public:
-    vector<string>v;
+    map<char,string>m;
     vector<string>res;
-    void f(string &s,int i=0,string t=""){
-        if(i==s.size()){
-            if(t.size())res.push_back(t);
+    void f(string &s,string &t,int i=0)
+    {
+        if(i==s.size())
+        {
+            if(t.size()) res.push_back(t);
             return;
         }
-        string k = v[s[i]-'0'];
-        for(char &c:k){
-            f(s,i+1,t+c);
+        string st = m[s[i]];
+        for(int k=0;k<st.size();k++)
+        {
+            t.push_back(st[k]);
+            f(s,t,i+1);
+            t.pop_back();
         }
     }
-    vector<string> letterCombinations(string digits) {
-        char c ='a';
-        v.resize(10);
-        for(int i=2;i<10;i++){
-            string s= "";
-            if(i==7||i==9){
-                int x =4;
-                while(x--){s += c;
-                c++;}
-                v[i]= s;
-            }else{
-                int x =3;
-                while(x--){s += c;
-                c++;}
-                v[i] = s;
-            }
+    vector<string> letterCombinations(string digits) 
+    {
+        char c = 'a';
+        for(char i='2';i<='9';i++)
+        {
+            string s;
+            s += c++; s += c++; s += c++;
+            if(i=='7'||i=='9') s += c++;
+            m[i] = s;
         }
-        f(digits);
+        string t="";
+        f(digits,t);
         return res;
     }
 };
