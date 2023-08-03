@@ -1,22 +1,16 @@
 class Solution {
 public:
-    // inorder of a bst is always sorted
-    int cnt,ans;
-    void f(TreeNode* root,int k)
+    vector<int>v;
+    void f(TreeNode* root)
     {
         if(!root) return;
-        f(root->left,k);
-        cnt++;
-        if(cnt==k)
-        {
-            ans = root->val;
-            return;
-        }
-        f(root->right,k);
+        f(root->left);
+        v.push_back(root->val);
+        f(root->right);
     }
     int kthSmallest(TreeNode* root, int k) 
     {
-        f(root,k);
-        return ans;
+        f(root);
+        return v[k-1];
     }
 };
