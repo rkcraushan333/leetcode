@@ -1,12 +1,12 @@
 #define ll long long
 const ll mod = 1e9+7;
-ll dp[101][101][101];
+ll dp[101][101];
 class Solution {
 public:
     ll f(int n,int t,int goal,int k)
     {
         if(goal==0) return n==0;
-        ll &rkc = dp[n][goal][t];
+        ll &rkc = dp[n][goal];
         if(rkc!=-1) return rkc;
         ll ans = 0;
         if(n>0)
