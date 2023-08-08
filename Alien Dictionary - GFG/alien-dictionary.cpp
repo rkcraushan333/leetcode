@@ -11,14 +11,14 @@ class Solution{
     public:
     string findOrder(string dict[], int n, int k) 
     {
-        vector<set<int>>adj(k);
+        vector<int>adj[k];
         for(int i=0;i<n-1;i++){
             string s = dict[i];
             string t = dict[i+1];
             int i1=0;
             while(i1<s.size()&&i1<t.size()){
                 if(s[i1]!=t[i1]){
-                    adj[s[i1]-'a'].insert(t[i1]-'a');
+                    adj[s[i1]-'a'].push_back(t[i1]-'a');
                     break;
                 }
                 i1++;
