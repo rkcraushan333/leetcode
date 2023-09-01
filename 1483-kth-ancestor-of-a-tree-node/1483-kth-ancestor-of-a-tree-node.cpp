@@ -1,34 +1,35 @@
 class TreeAncestor {
 public:
-    vector<vector<int>>bin;
+    vector<vector<int>>table;
     TreeAncestor(int n, vector<int>& parent) 
     {
-        bin.resize(17,vector<int>(n));
-        bin[0] = parent;
-        for(int i=1;i<17;i++)
+        table.resize(21,vector<int>(n));
+        for(int i=0;i<n;i++)
+        {
+            table[0][i] = parent[i];
+        }
+        for(int i=1;i<20;i++)
         {
             for(int j=0;j<n;j++)
             {
-                if(bin[i-1][j]==-1) bin[i][j] = -1;
-                else {
-                    bin[i][j] = bin[i-1][bin[i-1][j]];
-                }
+                if(table[i-1][j]==-1) table[i][j] = -1;
+                else table[i][j] = table[i-1][table[i-1][j]];
             }
         }
     }
     
     int getKthAncestor(int node, int k) 
     {
-        int i=0;
+        int i = 0;
         while(k)
         {
             if(k&1)
             {
-                node = bin[i][node];
+                node = table[i][node];
+                if(node==-1) break;
             }
-            if(node==-1) return -1;
             i++;
-            k >>= 1;
+            k>>=1;
         }
         return node;
     }
