@@ -1,3 +1,4 @@
+// O(2n) == O(n)
 class Solution {
 public:
     int longestConsecutive(vector<int>& nums) 
