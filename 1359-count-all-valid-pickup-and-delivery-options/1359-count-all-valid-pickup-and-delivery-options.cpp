@@ -1,24 +1,19 @@
 class Solution {
 public:
     const int mod = 1e9+7;
-    int dp[501][501];
-    int f(int p,int d)
+    #define ll long long
+    ll dp[501][501];
+    ll f(int p,int d)
     {
         if(p==0&&d==0) return 1;
-        int &rkc = dp[p][d];
+        ll &rkc = dp[p][d];
         if(rkc!=-1) return rkc;
-        int ans = 0;
-        int a = p,b = d;
-        for(int i=0;i<a;i++)
-        {
-            ans += f(p-1,d+1);
-            ans %= mod;
-        }
-        for(int i=0;i<b;i++)
-        {
-            ans += f(p,d-1);
-            ans %= mod;
-        }
+        ll ans = 0;
+        ll a = p,b = d;
+        if(p) ans += (a*f(p-1,d+1))%mod;
+        ans %= mod;
+        if(d) ans += (b*f(p,d-1))%mod;
+        ans %= mod;
         return rkc = ans;
     }
     int countOrders(int n) 
