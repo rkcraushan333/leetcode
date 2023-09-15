@@ -1,5 +1,5 @@
 // Minimum Spanning Tree
-// ...greedly :=> Prim's Algorithm ....DSU
+// ...greedly :=> kruskal's Algorithm ....DSU
 class dsu
 {
 private:
