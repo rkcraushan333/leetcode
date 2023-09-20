@@ -1,39 +1,35 @@
+// Time Complexity :- O(n^2)
 class Solution {
 public:
     int findNumberOfLIS(vector<int>& nums) 
     {
         int n = nums.size();
-        vector<int>len(n,1),cnt(n,1);
+        vector<pair<int,int>>dp(n,{1,1});
+        int mx = 1,ans = 0;
         for(int i=1;i<n;i++)
         {
             for(int j=0;j<i;j++)
             {
-                if(nums[i]>nums[j])
+                if(nums[j]<nums[i])
                 {
-                    int c = len[j]+1;
-                    if(c==len[i])
+                    if(dp[i].first==dp[j].first+1)
                     {
-                        cnt[i] += cnt[j];
+                        dp[i].second += dp[j].second;
                     }
-                    else if(c>len[i])
+                    else if(dp[i].first<dp[j].first+1)
                     {
-                        len[i] = c;
-                        cnt[i] = cnt[j]; 
+                        dp[i] = dp[j];
+                        dp[i].first++;
                     }
                 }
             }
+            mx = max(mx,dp[i].first);
         }
-        int maxi=1;
-        for(auto i:len)
+        for(pair<int,int> &p:dp)
         {
-            maxi = max(maxi,i);
-        }
-        int ans = 0;
-        for(auto i=0;i<n;i++)
-        {
-            if(maxi==len[i])
+            if(p.first==mx)
             {
-                ans += cnt[i];
+                ans += p.second;
             }
         }
         return ans;
