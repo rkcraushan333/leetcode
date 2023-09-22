@@ -6,9 +6,10 @@ public:
         for(int j=0;j<32;j++)
         {
             int cnt = 0;
+            int val = (1<<j);
             for(auto i:nums)
             {
-                if((i)&(1<<j))
+                if(i&val)
                 {
                     cnt++;
                 }
