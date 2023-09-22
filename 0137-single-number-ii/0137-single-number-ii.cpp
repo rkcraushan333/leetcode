@@ -8,7 +8,7 @@ public:
             int cnt = 0;
             for(auto i:nums)
             {
-                if((i>>j)&1)
+                if((i)&(1<<j))
                 {
                     cnt++;
                 }
