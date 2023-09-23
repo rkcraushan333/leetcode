@@ -1,69 +1,64 @@
 class Solution {
 public:
-    static bool comp(string &s,string &t) 
+    static bool compare(string &s,string &t)
     {
         return s.size()<t.size();
     }
-    int dp[1001][1002];
-    set<pair<int,int>>st;
-    int f(vector<string>&v,int i=0,int j = -1)
+    set<pair<int,int>>mp;
+    int fun(vector<string>&words,int i,int j,vector<vector<int>>&dp)
     {
-        if(i==v.size()) return 0;
-        int &rkc = dp[i][j+1];
-        if(rkc!=-1) return rkc;
+        if(i==words.size()) return 0;
+        if(dp[i][j+1]!=-1) return dp[i][j+1];
         int ans = 0;
-        ans = max(ans,f(v,i+1,j));
         if(j==-1)
         {
-            ans = max(ans,1+f(v,i+1,i));
+            ans = max(ans,1+fun(words,i+1,i,dp));
+            ans = max(ans,fun(words,i+1,j,dp));
         }
         else
         {
-            if(st.count({j,i}))
+            if(mp.find({j,i})!=mp.end())
             {
-                ans = max(ans,1+f(v,i+1,i));
+                ans = max(ans,1+fun(words,i+1,i,dp));
+                ans = max(ans,fun(words,i+1,j,dp));
+            }
+            else
+            {
+                ans = max(ans,fun(words,i+1,j,dp));
             }
         }
-        return rkc = ans;
+        return dp[i][j+1] = ans;
     }
     int longestStrChain(vector<string>& words) 
     {
+        sort(words.begin(),words.end(),compare);
         int n = words.size();
-        memset(dp,-1,sizeof(dp));
-        sort(words.begin(),words.end(),comp);
         for(int i=0;i<n-1;i++)
         {
             for(int j=i+1;j<n;j++)
             {
-                string a = words[i],b = words[j];
-            if(b.size()-a.size()==1)
+            string s1 = words[i],s2 = words[j];
+            int i1=0,j1=0,cnt=0;
+            while(i1<s1.size()&&j1<s2.size())
             {
-                int i1 = 0,i2 = 0,cnt = 0;
-                while(i1<a.size()&&i2<b.size())
+                if(s1[i1]==s2[j1])
                 {
-                    if(a[i1]!=b[i2])
-                    {
-                        cnt++;
-                        i2++;
-                    }
-                    else
-                    {
-                        i1++; i2++;
-                    }
+                    i1++;
+                    j1++;
                 }
-                cnt += a.size()-i1;
-                cnt += b.size()-i2;
-                if(cnt==1)
+                else
                 {
-                    st.insert({i,j});
+                    cnt++;
+                    j1++;
                 }
             }
-            }
+             bool take = 1;
+            cnt += (s1.size()-i1)+(s2.size()-j1);
+            if(cnt!=1) take = 0; 
+            if(take==1) mp.insert({i,j});
         }
-        // for(auto i:st){
-        //     cout<<i.first<<" "<<i.second<<endl;
-        // }
-        return f(words);
-        // return 1;
+    }
+        vector<vector<int>>dp(n+1,vector<int>(n+2,-1));
+        return fun(words,0,-1,dp);
     }
 };
