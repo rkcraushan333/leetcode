@@ -1,49 +1,46 @@
-class TrieNode{
-    private:
-    TrieNode* child[2];
-    public:
-    TrieNode(){
-        for(int i=0;i<2;i++)
-        {
-            child[i] = NULL;
-        }
+class TrieNode
+{
+    vector<TrieNode*>child;
+public:
+    TrieNode()
+    {
+        child.resize(2);
+        child[0] = NULL; child[1] = NULL;
     }
     bool check(char c)
     {
         return child[c-'0']!=NULL;
     }
-    void create(char c,TrieNode* node)
-    {
-        child[c-'0'] = node;
-    }
     TrieNode* getNext(char c)
     {
         return child[c-'0'];
     }
+    void create(char c,TrieNode* node1)
+    {
+        child[c-'0'] = node1;
+    }
 };
-class Trie{
-    private:
+class Trie
+{
     TrieNode* root;
-    public:
+public:
     Trie()
     {
         root = new TrieNode();
     }
-    void insert(string &word)
+    void insert(string &s)
     {
         TrieNode* node = root;
-        for(auto i:word)
+        for(auto i:s)
         {
             if(!node->check(i))
-            {
                 node->create(i,new TrieNode());
-            }
             node = node->getNext(i);
         }
     }
-    string maxXor(string &s)
+    string findMax(string &s)
     {
-        string ans = "";
+        string ans= "";
         TrieNode* node = root;
         for(auto i:s)
         {
@@ -57,7 +54,7 @@ class Trie{
                 else
                 {
                     ans += '0';
-                    node = node->getNext('0');
+                    node =  node->getNext('0');
                 }
             }
             else
@@ -67,7 +64,7 @@ class Trie{
                     ans += '1';
                     node = node->getNext('0');
                 }
-                else
+                else 
                 {
                     ans += '0';
                     node = node->getNext('1');
@@ -79,49 +76,50 @@ class Trie{
 };
 class Solution {
 public:
-    string decToBin(int n)
+    string d2b(int n)
     {
-        string s;
+        string s = "";
         while(n)
         {
-            s += '0'+(n%2);
+            if(n%2==0) s += '0';
+            else s += '1';
             n /= 2;
         }
-        while(s.size()<31)
+        while(s.size()<32)
         {
             s += '0';
         }
         reverse(s.begin(),s.end());
         return s;
     }
-    int binToDec(string &s)
+    int b2d(string &s)
     {
         int ans = 0;
         reverse(s.begin(),s.end());
-        for(int i=0;i<32;i++)
+        for(int i=0;i<s.size();i++)
         {
             if(s[i]=='1')
             {
-                ans += pow(2,i);
+                ans |= (1<<i);
             }
         }
         return ans;
     }
     int findMaximumXOR(vector<int>& nums) 
     {
-        Trie* t = new Trie();
+        Trie *t = new Trie();
+        for(int i=0;i<nums.size();i++)
+        {
+            string s = d2b(nums[i]);
+            t->insert(s);
+        }
         int ans = 0;
         for(auto i:nums)
         {
-            string s = decToBin(i);
-            t->insert(s);
-        }
-        for(auto i:nums)
-        {
-            string s = decToBin(i);
-            string temp = t->maxXor(s);
-            // cout<<temp<<endl;
-            ans = max(ans,binToDec(temp));
+            string s = d2b(i);
+            string t1 = t->findMax(s);
+            int x = b2d(t1);
+            ans = max(ans,x);
         }
         return ans;
     }
