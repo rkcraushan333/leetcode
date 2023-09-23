@@ -1,42 +1,36 @@
 class Solution {
 public:
-    double dfs(int n,vector<vector<int>>&adj,int t,int target,int s,int par)
+    double fun(vector<vector<int>>&adj,int t,int target,int src,int par)
     {
-        if(s==target && t==0)
-            return 1;
-        if(t<=0)
-            return 0;
-        
-        double ans = 0.0;
-        vector<int> x;
-        for(auto i:adj[s])
+        if(t==0) return src==target;
+        if(src==target)
         {
-            if(i!=par)
-                x.push_back(i);    
+            if(src==1) return  adj[src].size()==0;
+            return adj[src].size()==1;
         }
-        if(x.size()==0)
+        double ans = 0;
+        for(int i=0;i<adj[src].size();i++)
         {
-           if(t>0 && s==target)
-               return 1;
-            else
-                return 0;
+            int curr = adj[src][i];
+            double prob;
+            if(src==1) prob = (1.0/adj[src].size());
+            else prob = (1.0/(adj[src].size()-1));
+            if(par!=curr)
+            {
+                ans += prob*fun(adj,t-1,target,curr,src);
+            }
         }
-        for(auto tt:x)
-        {
-              ans+=dfs(n,adj,t-1,target,tt,s)/(double)(x.size());;
-              
-        }
-       
         return ans;
     }
     double frogPosition(int n, vector<vector<int>>& edges, int t, int target) 
     {
         vector<vector<int>>adj(n+1);
-        for(auto v:edges)
+        for(int i=0;i<edges.size();i++)
         {
-            adj[v[0]].push_back(v[1]);
-            adj[v[1]].push_back(v[0]);
+            adj[edges[i][0]].push_back(edges[i][1]);
+            adj[edges[i][1]].push_back(edges[i][0]);
         }
-        return dfs(n,adj,t,target,1,-1);
+        double ans = fun(adj,t,target,1,-1);
+        return ans;
     }
 };
