@@ -1,47 +1,35 @@
+// Using two stacks with O(n) push time
 class MyQueue {
-    stack<int>s;
 public:
+    stack<int>s1,s2;
     MyQueue() {
         
     }
-    
     void push(int x) {
-        s.push(x);
+        while(s1.size())
+        {
+            s2.push(s1.top());
+            s1.pop();
+        }
+        s1.push(x);
+        while(s2.size())
+        {
+            s1.push(s2.top());
+            s2.pop();
+        }
     }
-    // 4 2 5 1 9
+    
     int pop() {
-        vector<int>v;
-        while(s.size()>1)
-        {
-            v.push_back(s.top());
-            s.pop();
-        }
-        int x = s.top();
-        s.pop();
-        for(int i=v.size()-1;i>=0;i--)
-        {
-            s.push(v[i]);
-        }
+        int x = s1.top(); s1.pop();
         return x;
     }
     
     int peek() {
-        vector<int>v;
-        while(s.size()>1)
-        {
-            v.push_back(s.top());
-            s.pop();
-        }
-        int x = s.top();
-        for(int i=v.size()-1;i>=0;i--)
-        {
-            s.push(v[i]);
-        }
-        return x;
+        return s1.top();
     }
     
     bool empty() {
-        return s.size()==0;
+        return s1.size()==0;
     }
 };
 
