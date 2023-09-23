@@ -1,51 +1,47 @@
-class TrieNode{
-    private:
-    TrieNode* child[2];
-    public:
+class TrieNode
+{
+    vector<TrieNode*>child;
+public:
     TrieNode()
     {
-        for(int i=0;i<2;i++) 
-        {
-            child[i] = NULL;
-        }
+        child.resize(2);
+        child[0] = NULL; child[1] = NULL;
     }
     bool check(char c)
     {
         return child[c-'0']!=NULL;
     }
-    void create(char c,TrieNode* node)
-    {
-        child[c-'0'] = node;
-    }
     TrieNode* getNext(char c)
     {
         return child[c-'0'];
     }
+    void create(char c,TrieNode* node1)
+    {
+        child[c-'0'] = node1;
+    }
 };
-class Trie{
-    private:
+class Trie
+{
     TrieNode* root;
-    public:
+public:
     Trie()
     {
         root = new TrieNode();
     }
-    void insert(string &word)
+    void insert(string s)
     {
         TrieNode* node = root;
-        for(auto i:word)
+        for(auto i:s)
         {
             if(!node->check(i))
-            {
                 node->create(i,new TrieNode());
-            }
             node = node->getNext(i);
         }
     }
-    string maxXor(string &s)
+    string findMax(string s)
     {
+        string ans= "";
         TrieNode* node = root;
-        string ans = "";
         for(auto i:s)
         {
             if(i=='0')
@@ -58,7 +54,7 @@ class Trie{
                 else
                 {
                     ans += '0';
-                    node = node->getNext('0');
+                    node =  node->getNext('0');
                 }
             }
             else
@@ -68,7 +64,7 @@ class Trie{
                     ans += '1';
                     node = node->getNext('0');
                 }
-                else
+                else 
                 {
                     ans += '0';
                     node = node->getNext('1');
@@ -78,19 +74,20 @@ class Trie{
         return ans;
     }
 };
-bool cmp(vector<int>&a,vector<int>&b)
-{
-      return a[1]<b[1];
-}
 class Solution {
 public:
     string d2b(int n)
     {
         string s = "";
-        for(int i=0;i<31;i++)
+        while(n)
         {
-            s += '0'+(n%2);
+            if(n%2==0) s += '0';
+            else s += '1';
             n /= 2;
+        }
+        while(s.size()<32)
+        {
+            s += '0';
         }
         reverse(s.begin(),s.end());
         return s;
@@ -99,46 +96,46 @@ public:
     {
         int ans = 0;
         reverse(s.begin(),s.end());
-        for(int i=0;i<31;i++)
+        for(int i=0;i<s.size();i++)
         {
             if(s[i]=='1')
             {
-                ans += pow(2,i);
+                ans |= (1<<i);
             }
         }
         return ans;
     }
-    // Using Offline queries concept
-    vector<int> maximizeXor(vector<int>& nums, vector<vector<int>>& queries)     {
-        for(int j=0;j<queries.size();j++)
+    static bool cmp(vector<int>&a,vector<int>&b)
+    {
+        return a[1]<b[1];
+    }
+    vector<int> maximizeXor(vector<int>& nums, vector<vector<int>>& queries) 
+    {
+        for(int i=0;i<queries.size();i++)
         {
-            queries[j].push_back(j);
+            queries[i].push_back(i);
         }
+        Trie* t = new Trie();
         sort(nums.begin(),nums.end());
         sort(queries.begin(),queries.end(),cmp);
-        Trie* t = new Trie();
-        int i = 0;
-        vector<int>v(queries.size());
-        for(auto vv:queries)
+        int i=0,j=0;
+        vector<int>ans(queries.size());
+        while(j<queries.size())
         {
-            int a = vv[0], b = vv[1], c = vv[2];
-            while(i<nums.size()&&nums[i]<=b)
+            while(i<nums.size()&&queries[j][1]>=nums[i])
             {
-                string st = d2b(nums[i]);
-                t->insert(st);
+                string s1 = d2b(nums[i]);
+                t->insert(s1);
                 i++;
             }
-            if(i==0) 
-            {
-                v[c] = -1;
+            if(i==0) ans[queries[j][2]]=-1;
+            else{
+            string s2 = d2b(queries[j][0]);
+            string t1 = t->findMax(s2);
+            ans[queries[j][2]]=b2d(t1);
             }
-            else
-            {
-                string temp1 = d2b(a);
-                string temp2 = t->maxXor(temp1);
-                v[c] = b2d(temp2);
-            }
+            j++;
         }
-        return v;
+        return ans;
     }
 };
