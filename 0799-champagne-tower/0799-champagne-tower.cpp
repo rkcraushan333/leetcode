@@ -1,21 +1,22 @@
 class Solution {
 public:
-    double champagneTower(int poured, int query_row, int query_glass)
+    map<pair<int,int>,double>dp;
+    double f(double t,int r,int c)
     {
-        vector<vector<double>>dp(101,vector<double>(101));
-        dp[0][0] = poured;
-        for(int i=1;i<101;i++)
-        {
-            for(int j=0;j<i;j++)
-            {
-                if(dp[i-1][j]>1.0)
-                {
-                    double d = (dp[i-1][j]-1.0)/2;
-                    dp[i][j] += d;
-                    dp[i][j+1] += d;
-                }
-            }
-        }
-        return min(1.0,dp[query_row][query_glass]);
+        if(r==0&&c==0)
+            return t;
+        if(r<0||c<0||r<c)
+            return 0.0;
+        if(dp.count({r,c})) return dp[{r,c}];
+        
+        double a = (f(t,r-1,c)-1.0)/2.0;
+        double b = (f(t,r-1,c-1)-1.0)/2.0;
+        a = max(0.0,a); b = max(0.0,b);
+        return dp[{r,c}] = a+b;
+    }
+    double champagneTower(int t, int r, int c) 
+    {
+        double t1 = t;
+        return min(1.0,f(t1,r,c));
     }
 };
